@@ -8,7 +8,7 @@ using Android.OS;
 
 namespace WarGame
 {
-    [Activity(Label = "WarGame", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Label = "WarGame", Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
 

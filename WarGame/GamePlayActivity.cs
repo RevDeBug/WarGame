@@ -12,227 +12,92 @@ using Android.Widget;
 
 namespace WarGame
 {
-    [Activity(Label = "GamePlayActivity")]
+    [Activity(Label = "Pick a card", MainLauncher = true, ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class GamePlayActivity : Activity
     {
-        public int player1Score;
-        public int player2Score;
+        public string CardDesc1;
+        public string CardDesc2;
+        public string CardDesc3;
+        public string CardDesc4;
+        public string CardDesc5;
+        public string CardDesc6;
+
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.GamePlay);
-           
+
             //create a new deck of cards
             Deck.CreateDeck();
 
             //shuffle that deck of cards
             Deck.Shuffle(3);
 
-            
-
-            Button button = FindViewById<Button>(Resource.Id.dealHand);
-            button.Click += delegate
-            {
-                //deal out the first two cards to be displayed
-                ImageView card1 = FindViewById<ImageView>(Resource.Id.card1);
-                ImageView card2 = FindViewById<ImageView>(Resource.Id.card2);
-
-                if (Deck.player1.Count < 52 || Deck.player2.Count < 52)
-                {
-                    //update the score at the beginning of each hand
-                    TextView score1 = FindViewById<TextView>(Resource.Id.player1Score);
-                    score1.Text = "Player 1: " + player1Score;
-                    TextView score2 = FindViewById<TextView>(Resource.Id.player2Score);
-                    score2.Text = "Player 2: " + player2Score;
-
-                    //grab the top two cards from the deck
-                    Card selectedCard1 = Deck.player1.NextOf(null);
-                    Card selectedCard2 = Deck.player2.NextOf(null);
-
-                    card1.SetImageResource(CardID(selectedCard1));
-                    card2.SetImageResource(CardID(selectedCard2));
-
-                    //determine which card is higher?
-                    if(selectedCard1.FaceValue > selectedCard2.FaceValue)
-                    {
-                        //we know selectedCard1 has a higher value
-                        //player 1 wins the hand
-                        //notify the player
-                        Toast.MakeText(this, "Winner: Player 1", ToastLength.Short).Show();
-
-                        //assign the cards to the appropriate deck
-                       
-                        Deck.player1.Add(selectedCard2);
-                        Deck.player2.Remove(selectedCard2);
-
-                        Deck.player1.Remove(selectedCard1);
-                        Deck.player1.Add(selectedCard1);
-
-                        //award 1 point for every hand won
-                        player1Score += 1;
-                        
-                    }
-                    else if( selectedCard2.FaceValue > selectedCard1.FaceValue)
-                    {
-                        //we know selectedCard2 has a higher value
-                        //player 2 wins the hand
-                        //notify the player
-                        Toast.MakeText(this, "Winner: Player 2", ToastLength.Short).Show();
-
-                        //assign the cards to the appropriate deck
-                        Deck.player2.Add(selectedCard1);
-                        Deck.player1.Remove(selectedCard1);
-
-                        Deck.player2.Remove(selectedCard2);
-                        Deck.player2.Add(selectedCard2);
-
-                        //award 1 point for every hand won
-                        player2Score += 1;
-                    }
-                    else if (selectedCard1.FaceValue == selectedCard2.FaceValue)
-                    {
-                        //we know the two cards have the same rank
-                        //it's war!
-                        WarLogic(selectedCard1, selectedCard2);
-                    }
-
-                }
-                else //someone has 52 cards The game is over
-                //we need to declare a winner
-                {
-                    if (Deck.player1.Count >= 52)
-                    {
-                        //player 1 wins!
-                        button.Enabled = false;
-
-                        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                        alert.SetTitle("Player 1 Wins!");
-                        alert.SetPositiveButton("OK!", (senderAlert, args) =>
-                        {
-
-                        });
-                    }
-                    else
-                    {
-                        //player 2 wins!
-                        button.Enabled = false;
-
-                        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                        alert.SetTitle("Player 2 Wins!");
-                        alert.SetPositiveButton("OK!", (senderAlert, args) =>
-                        {
-
-                        });
-                    }
-                }
-            
-
-            };
-            
-        }
-
-        public void WarLogic(Card selectedCard1, Card selectedCard2)
-        {
             ImageView card1 = FindViewById<ImageView>(Resource.Id.card1);
             ImageView card2 = FindViewById<ImageView>(Resource.Id.card2);
-            Button button = FindViewById<Button>(Resource.Id.dealHand);
+            ImageView card3 = FindViewById<ImageView>(Resource.Id.card3);
+            ImageView card4 = FindViewById<ImageView>(Resource.Id.card4);
+            ImageView card5 = FindViewById<ImageView>(Resource.Id.card5);
+            ImageView card6 = FindViewById<ImageView>(Resource.Id.card6);
 
-            //we know the two cards have the same rank
-            //it's war!
-            button.Enabled = false;
+            Card selectedCard1 = Deck.player1.NextOf(null, 1);
+            Card selectedCard2 = Deck.player2.NextOf(null, 1);
+            Card selectedCard3 = Deck.player1.NextOf(null, 2);
+            Card selectedCard4 = Deck.player2.NextOf(null, 2);
+            Card selectedCard5 = Deck.player1.NextOf(null, 3);
+            Card selectedCard6 = Deck.player2.NextOf(null, 3);
 
-            //turn up two cards (one for each player)
-            //the winner gets 6 cards (points) from the first set of cards, the "face down" set
-            //of cards, and the face up set for war.
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.SetTitle("War!");
-            alert.SetPositiveButton("Let's Play!", (senderAlert, args) => {
-                //this is where we put the war logic
+            card1.SetImageResource(CardID(selectedCard1));
+            card2.SetImageResource(CardID(selectedCard2));
+            card3.SetImageResource(CardID(selectedCard3));
+            card4.SetImageResource(CardID(selectedCard4));
+            card5.SetImageResource(CardID(selectedCard5));
+            card6.SetImageResource(CardID(selectedCard6));
 
-                //take both cards that triggered the war and put them in the war list
-                Deck.warCards.Add(selectedCard1);
-                Deck.warCards.Add(selectedCard2);
+            CardDesc1 = selectedCard1.FaceValue.ToString() + " of " + selectedCard1.Suit.ToString();
+            CardDesc2 = selectedCard2.FaceValue.ToString() + " of " + selectedCard2.Suit.ToString();
+            CardDesc3 = selectedCard3.FaceValue.ToString() + " of " + selectedCard3.Suit.ToString();
+            CardDesc4 = selectedCard4.FaceValue.ToString() + " of " + selectedCard4.Suit.ToString();
+            CardDesc5 = selectedCard5.FaceValue.ToString() + " of " + selectedCard5.Suit.ToString();
+            CardDesc6 = selectedCard6.FaceValue.ToString() + " of " + selectedCard6.Suit.ToString();
 
-                //remove the trigger cards from the player's hands
-                Deck.player1.Remove(selectedCard1);
-                Deck.player2.Remove(selectedCard2);
+            card1.Click += Card1_Click;
+            card2.Click += Card2_Click;
+            card3.Click += Card3_Click;
+            card4.Click += Card4_Click;
+            card5.Click += Card5_Click;
+            card6.Click += Card6_Click;
+        }
 
-                //pull out one card from each player's deck to put into the war list as the 
-                //facedown cards
-                //grab the top two cards from the deck
+        private void Card1_Click(object sender, EventArgs e)
+        {
+            throw new Exception(CardDesc1);
+        }
 
-                selectedCard1 = Deck.player1.NextOf(null);
-                selectedCard2 = Deck.player2.NextOf(null);
-                Deck.warCards.Add(selectedCard1);
-                Deck.warCards.Add(selectedCard2);
-                //remove the  cards from the player's hands
-                Deck.player1.Remove(selectedCard1);
-                Deck.player2.Remove(selectedCard2);
+        private void Card2_Click(object sender, EventArgs e)
+        {
+            throw new Exception(CardDesc2);
+        }
 
-                //one card from the top of each player's deck to play war
-                //these cards will be displayed
-                selectedCard1 = Deck.player1.NextOf(null);
-                selectedCard2 = Deck.player2.NextOf(null);
+        private void Card3_Click(object sender, EventArgs e)
+        {
+            throw new Exception(CardDesc3);
+        }
 
-                card1.SetImageResource(CardID(selectedCard1));
-                card2.SetImageResource(CardID(selectedCard2));
+        private void Card4_Click(object sender, EventArgs e)
+        {
+            throw new Exception(CardDesc4);
+        }
 
-                //determine which card is higher?
-                if (selectedCard1.FaceValue > selectedCard2.FaceValue)
-                {
-                    //player 1 wins the war
-                    Toast.MakeText(this, "Player 1 Wins the War!", ToastLength.Short).Show();
-                    Deck.player1.Add(selectedCard2);
-                    Deck.player2.Remove(selectedCard2);
+        private void Card5_Click(object sender, EventArgs e)
+        {
+            throw new Exception(CardDesc5);
+        }
 
-                    foreach (Card c in Deck.warCards)
-                    {
-                        //add the card into the player's hand
-                        Deck.player1.Add(c);
-                    }
-
-                    //clear the war list
-                    Deck.warCards.Clear();
-
-                    //award 6 points
-                    player1Score += 6;
-
-                    //turn the deal button back on 
-                    button.Enabled = true;
-
-
-                }
-                else if (selectedCard2.FaceValue > selectedCard1.FaceValue)
-                {
-                    //player 2 wins the war
-                    Toast.MakeText(this, "Player 2 Wins the War!", ToastLength.Short).Show();
-                    Deck.player2.Add(selectedCard1);
-                    Deck.player1.Remove(selectedCard1);
-
-                    foreach (Card c in Deck.warCards)
-                    {
-                        Deck.player2.Add(c);
-                    }
-
-                    //clear the war list
-                    Deck.warCards.Clear();
-
-                    //award 6 points
-                    player2Score += 6;
-
-                    //turn the deal button back on 
-                    button.Enabled = true;
-                }
-                else if (selectedCard1.FaceValue == selectedCard2.FaceValue)
-                {
-                    //the cards are the same and we play war again
-                    WarLogic(selectedCard1, selectedCard2);
-                }
-            });
-
-            //run the alert
-            alert.Show();
+        private void Card6_Click(object sender, EventArgs e)
+        {
+            throw new Exception(CardDesc6);
         }
 
         public int CardID(Card card)
@@ -266,7 +131,7 @@ namespace WarGame
                                 }
                         }
                         break;
-                       
+
                     }
                 #endregion
 

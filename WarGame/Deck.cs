@@ -22,9 +22,9 @@ namespace WarGame
 
         static public List<Card> warCards;
 
-        public static Card NextOf<Card>(this IList<Card> list, Card item)
+        public static Card NextOf<Card>(this IList<Card> list, Card item,int index)
         {
-            return list[(list.IndexOf(item) + 1) == list.Count ? 0 : (list.IndexOf(item) + 1)];
+            return list[(list.IndexOf(item) + + index) == list.Count ? 0 : (list.IndexOf(item) + index)];
         }
 
         static public void CreateDeck()
